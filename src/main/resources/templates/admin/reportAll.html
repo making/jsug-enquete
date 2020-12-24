@@ -1,0 +1,115 @@
+<html xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>全セッションレポート</title>
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" href="../../static/images/favicon.ico"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css"/>
+    <link rel="stylesheet" th:href="@{/css/theme.css}" href="../../static/css/theme.css"/>
+</head>
+<body>
+<section>
+    <h2>全セッションレポート</h2>
+</section>
+<section>
+    <h2>セッション毎レポート</h2>
+    <div>
+        <h3>満足度</h3>
+
+        <table>
+            <tr>
+                <th>順位</th>
+                <th>セミナー名</th>
+                <th>セッション名</th>
+                <th>
+                    NSAT (<a
+                        href="http://download.microsoft.com/download/3/2/2/32269687-F181-449A-8C72-317090403C70/Determining_Net_User_Satisfaction.docx">?</a>)
+                </th>
+                <th>平均満足度</th>
+                <th>回答数</th>
+            </tr>
+            <tr th:each="r,s : ${satisfactionReport}">
+                <td th:text="${s.count}"></td>
+                <td><a th:href="@{/admin/seminars/{seminarId}/report(seminarId=${r.key.seminarId})}"
+                       th:text="${r.key.seminarName}"></a></td>
+                <td><a th:href="@{/admin/sessions/{sessionId}/result(sessionId=${r.key.sessionId})}"
+                       th:text="${r.key.sessionName}"></a></td>
+                <td th:text="${r.value.nsat}"></td>
+                <td th:text="${T(java.lang.Math).round(r.value.average * 100) / 100.0}"></td>
+                <td th:text="${r.value.count}"></td>
+            </tr>
+        </table>
+        <div id="satisfactionsChart" th:style="${'height: '+(satisfactionReport.size() * 35)+'px;'}"></div>
+
+        <h3>難易度</h3>
+
+        <table>
+            <tr>
+                <th>順位</th>
+                <th>セミナー名</th>
+                <th>セッション名</th>
+                <th>平均難易度</th>
+                <th>回答数</th>
+            </tr>
+            <tr th:each="r,s : ${difficultyReport}">
+                <td th:text="${s.count}"></td>
+                <td><a th:href="@{/admin/seminars/{seminarId}/report(seminarId=${r.key.seminarId})}"
+                       th:text="${r.key.seminarName}"></a></td>
+                <td><a th:href="@{/admin/sessions/{sessionId}/result(sessionId=${r.key.sessionId})}"
+                       th:text="${r.key.sessionName}"></a></td>
+                <td th:text="${T(java.lang.Math).round(r.value.average * 100) / 100.0}"></td>
+                <td th:text="${r.value.count}"></td>
+            </tr>
+        </table>
+
+        <div id="difficultiesChart" th:style="${'height: '+(satisfactionReport.size() * 35)+'px;'}"></div>
+
+        <h3>NSAT vs. 難易度</h3>
+
+        <div id="correlationChart" style="height: 300px;"></div>
+
+    </div>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        google.charts.load('current', {'packages': ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var satisfactionsArray = JSON.parse(/*[[${satisfactionsArray}]]*/ '[["Task", "Hours per Day", "aaa", "bbb"],["Work", 11, 13, 14],["Eat", 2, 8, 2],["Commute", 2, 1, 1],["Watch TV", 2, 3, 5],["Sleep", 7, 2, 9]]');
+            var satisfactionsData = google.visualization.arrayToDataTable(satisfactionsArray);
+            var satisfactionsChart = new google.visualization.BarChart(document.getElementById('satisfactionsChart'));
+            satisfactionsChart.draw(satisfactionsData, {
+                legend: {position: 'top', maxLines: 3},
+                bar: {groupWidth: '75%'},
+                isStacked: true,
+                title: 'NSAT'
+            });
+
+            var difficultiesArray = JSON.parse(/*[[${difficultiesArray}]]*/ '[["Task", "Hours per Day", "aaa", "bbb"],["Work", 11, 13, 14],["Eat", 2, 8, 2],["Commute", 2, 1, 1],["Watch TV", 2, 3, 5],["Sleep", 7, 2, 9]]');
+            var difficultiesData = google.visualization.arrayToDataTable(difficultiesArray);
+            var difficultiesChart = new google.visualization.BarChart(document.getElementById('difficultiesChart'));
+            difficultiesChart.draw(difficultiesData, {
+                legend: {position: 'top', maxLines: 3},
+                bar: {groupWidth: '75%'},
+                isStacked: true,
+                title: '難易度'
+            });
+
+            var correlationArray = JSON.parse(/*[[${correlationData}]]*/ '[["Age", "Weight"], [ 4,      3], [ 4,      3.5], [ 1,     4], [ 4,      5], [ 3,      3.5], [ 1.5,    3]]');
+            var correlationData = google.visualization.arrayToDataTable(correlationArray);
+            var correlationChart = new google.visualization.ScatterChart(document.getElementById('correlationChart'));
+            correlationChart.draw(correlationData, {
+                title: 'NSAT vs. 難易度',
+                hAxis: {title: 'NSAT', minValue: 1, maxValue: 5},
+                vAxis: {title: '難易度', minValue: 1, maxValue: 5},
+                legend: 'none'
+            });
+        }
+    </script>
+    <hr/>
+    <a th:href="@{/}" href="../index.html" th:text="${@enqueteProps.applicationName}">🏠 アンケート</a>
+</section>
+</body>
+</html>

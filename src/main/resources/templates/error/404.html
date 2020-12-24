@@ -1,0 +1,46 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${@enqueteProps.applicationName}">アンケート</title>
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" href="../../static/images/favicon.ico"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css"/>
+    <link rel="stylesheet" th:href="@{/css/theme.css}" href="../../static/css/theme.css"/>
+</head>
+<body>
+<section>
+    <h1 th:text="${@enqueteProps.applicationName}">アンケート</h1>
+</section>
+<section>
+    <h3>ページが見つかりません</h3>
+    <div sec:authorize="authenticated">
+        <hr/>
+        <a th:href="@{/}" href="../index.html" th:text="${@enqueteProps.applicationName}">🏠 アンケート</a>
+    </div>
+    <table th:if="${@environment.acceptsProfiles('default')}">
+        <tr>
+            <th>Status</th>
+            <td th:text="${status}"></td>
+        </tr>
+        <tr>
+            <th>Error</th>
+            <td th:text="${error}"></td>
+        </tr>
+        <tr>
+            <th>Exception</th>
+            <td th:text="${exception}"></td>
+        </tr>
+        <tr>
+            <th>Message</th>
+            <td th:text="${message}"></td>
+        </tr>
+        <tr th:if="${trace}">
+            <th>Trace</th>
+            <td><pre th:text="${trace}"></pre></td>
+        </tr>
+    </table>
+</section>
+</body>
+</html>

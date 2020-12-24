@@ -1,0 +1,79 @@
+body {
+    font-size: medium;
+    line-height: 1.5em;
+}
+
+section {
+    margin: 8px auto;
+    line-height: 2em;
+    width: 96%;
+    padding: 5px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+}
+
+h1:before {
+    content: url("../images/h1-32x32.png") ' ';
+}
+
+h2:before {
+    content: "📝";
+}
+
+h3:before {
+    content: url("../images/h3-32x32.png");
+}
+
+h3 {
+    height: 32px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+h4:before {
+    content: "❓";
+}
+
+h4 {
+    border-bottom-style: dotted;
+    margin: 6px;
+}
+
+table {
+    border-collapse: collapse;
+    text-align: left;
+    line-height: 1.5;
+}
+
+th {
+    padding: 2px;
+}
+
+td {
+    padding: 5px;
+}
+
+textarea {
+    height: 60px;
+    width: 100%;
+}
+
+@keyframes blink {
+    75% {
+        opacity: 0.0;
+    }
+}
+
+@-webkit-keyframes blink {
+    75% {
+        opacity: 0.0;
+    }
+}
+
+#coupon {
+    animation: blink 1s step-end infinite;
+    -webkit-animation: blink 1s step-end infinite;
+}

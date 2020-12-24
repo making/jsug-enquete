@@ -1,0 +1,128 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${s.sessionName}">Ooops, page not found</title>
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" href="../static/images/favicon.ico"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
+    <link rel="stylesheet" th:href="@{/css/theme.css}" href="../static/css/theme.css"/>
+</head>
+<body>
+<section>
+    <h2><span th:text="${s.sessionName}">キーノート</span> <span th:text="${s.speakerDisplayNames}">スピーカー</span></h2>
+    <p sec:authorize="authenticated">
+        <span sec:authentication="principal.name">duke</span>さんログイン中。
+    </p>
+    <p sec:authorize="anonymous">
+        <a href="index.html" th:href="@{/}">GitHubでログイン</a>
+        <br/>
+        <span style="font-size: x-small;">ログインは必須ではありません。</span>
+    </p>
+</section>
+<section>
+    <form onsubmit="send(this);return false;">
+        <h3><span th:text="${s.sessionName}">キーノート</span>の感想</h3>
+        <div th:if="${s.seminar.open}" id="form" th:style="${'display: ' + (submitted ?'none' : 'block')}">
+            <h4>満足度はどうだったでしょうか？</h4>
+            <table>
+                <tr>
+                    <!--/*/ <th:block th:each="satisfaction : ${T(am.ik.openenquete.questionnaire.enums.Satisfaction).values()}"> /*/-->
+                    <th><label th:for="${#strings.toLowerCase(satisfaction)}"
+                               th:text="#{'satisfaction.' + ${#strings.toLowerCase(satisfaction)}}">aaa</label></th>
+                    <!--/*/ </th:block> /*/-->
+                </tr>
+                <tr>
+                    <!--/*/ <th:block th:each="satisfaction : ${T(am.ik.openenquete.questionnaire.enums.Satisfaction).values()}"> /*/-->
+                    <td><input type="radio" name="satisfaction" th:id="${#strings.toLowerCase(satisfaction)}"
+                               th:value="${satisfaction}" required="required"/></td>
+                    <!--/*/ </th:block> /*/-->
+                </tr>
+            </table>
+            <h4>難易度は良かったでしょうか？</h4>
+            <table>
+                <tr>
+                    <!--/*/ <th:block th:each="difficulty : ${T(am.ik.openenquete.questionnaire.enums.Difficulty).values()}"> /*/-->
+                    <th><label th:for="${#strings.toLowerCase(difficulty)}"
+                               th:text="#{'difficulty.' + ${#strings.toLowerCase(difficulty)}}">aaa</label></th>
+                    <!--/*/ </th:block> /*/-->
+                </tr>
+                <tr>
+                    <!--/*/ <th:block th:each="difficulty : ${T(am.ik.openenquete.questionnaire.enums.Difficulty).values()}"> /*/-->
+                    <td><input type="radio" name="difficulty" th:id="${#strings.toLowerCase(difficulty)}"
+                               th:value="${difficulty}" required="required"/></td>
+                    <!--/*/ </th:block> /*/-->
+                </tr>
+            </table>
+            <h4>何かご意見があれば教えてください (コメント内容の表現にはご配慮お願いいたします。)</h4>
+            <textarea name="comment"></textarea>
+            <hr/>
+            <input type="hidden" name="sessionId" th:value="${sessionId}"/>
+            <input type="submit" name="submit" value="Send"/>
+        </div>
+        <div th:unless="${s.seminar.open}">
+            受付終了しました。
+        </div>
+        <div id="thanks" th:style="${'display: ' + (submitted ?'block' : 'none')}">
+            回答ありがとうございました。<br/>
+            <img src="../static/images/thanks.png" th:src="@{/images/thanks.png}"/>
+            <p data-th-if="${coupon != null}">
+                <strong id="coupon">🎉 Coupon Get!!</strong><br>
+                クーポンを取得しました。下記のQRCodeを次回のイベントまで保存しておいてください。<br>
+                <img th:src="|data:image/png;base64,${qrCode}|"/>
+            </p>
+        </div>
+    </form>
+    <h3>イベント全体の感想</h3>
+    <ul>
+        <li><a th:href="@{/seminars/{seminarId}(seminarId=${s.seminar.seminarId})}"
+               th:text="${s.seminar.seminarName +' (' + #temporals.format(s.seminar.seminarDate, 'yyyy/MM/dd') + ')'}"
+               href="seminar.html"></a></li>
+    </ul>
+    <div sec:authorize="authenticated">
+        <hr/>
+        <a th:href="@{/}" href="index.html" th:text="${@enqueteProps.applicationName}">🏠 アンケート</a>
+    </div>
+    <script src="../static/js/axios.min.js" th:src="@{/js/axios.min.js}"></script>
+    <script src="../static/js/utils.js" th:src="@{/js/utils.js}"></script>
+    <script>
+        function send(form) {
+            var request = {
+                    satisfaction: checkedValue(form.satisfaction),
+                    difficulty: checkedValue(form.difficulty),
+                    comment: form.comment.value,
+                    session: {
+                        sessionId: form.sessionId.value
+                    }
+                },
+                submit = form.submit,
+                message = submit.value,
+                reset = function () {
+                    forEach(form.querySelectorAll('input,textarea'),
+                        function (x) {
+                            x.disabled = false;
+                        });
+                    submit.disabled = false;
+                    submit.value = message;
+                };
+            forEach(form.querySelectorAll('input,textarea'),
+                function (x) {
+                    x.disabled = true;
+                });
+            submit.value = 'Sending ...';
+            axios.post('/v1/responses_for_session', request)
+                .then(function (res) {
+                    window.location.reload();
+                })
+                .catch(function (e) {
+                    console.error(e);
+                    alert(JSON.stringify(e.response.data));
+                    reset();
+                });
+            return false;
+        }
+    </script>
+</section>
+</body>
+</html>
