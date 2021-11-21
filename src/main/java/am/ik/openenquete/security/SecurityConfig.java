@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/**") //
             .and() //
             .authorizeRequests() //
-            /* */.mvcMatchers("/v1/responses_for_session", "/v1/responses_for_seminar", "/v1/coupons/**", "/v1/coupon_used", "/seminars/*", "/sessions/*", "/coupons/*", "actuator/health",
+            /* */.mvcMatchers("/v1/responses_for_session", "/v1/responses_for_seminar", "/v1/coupons/**", "/v1/coupon_used", "/seminars/*", "/sessions/*", "/coupons/*", "/actuator/health",
             "/actuator/info",
             "/actuator/prometheus").permitAll() //
             /* */.mvcMatchers("/admin", "/admin/**", "/v1/**", "/actuator/**").hasRole("ADMIN") //
