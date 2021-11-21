@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.requestMatchers() //
-            .mvcMatchers("v1/seminars/{seminarId}/votes") //
+            .mvcMatchers("/v1/seminars/{seminarId}/votes") //
             .and() //
             .authorizeRequests() //
             /* */.mvcMatchers("v1/seminars/{seminarId}/votes").authenticated() //
@@ -42,9 +42,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/**") //
             .and() //
             .authorizeRequests() //
-            /* */.mvcMatchers("v1/responses_for_session", "v1/responses_for_seminar", "v1/coupons/**", "v1/coupon_used", "seminars/*", "sessions/*", "coupons/*", "actuator/health",
-            "actuator/info",
-            "actuator/prometheus").permitAll() //
+            /* */.mvcMatchers("/v1/responses_for_session", "/v1/responses_for_seminar", "/v1/coupons/**", "/v1/coupon_used", "/seminars/*", "/sessions/*", "/coupons/*", "actuator/health",
+            "/actuator/info",
+            "/actuator/prometheus").permitAll() //
             /* */.mvcMatchers("/admin", "/admin/**", "/v1/**", "/actuator/**").hasRole("ADMIN") //
             /* */.antMatchers("/login**").permitAll() //
             /* */.anyRequest().authenticated() //

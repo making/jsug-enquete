@@ -1,28 +1,7 @@
 package am.ik.openenquete;
 
-import static java.util.Arrays.asList;
-
 import java.time.LocalDate;
 import java.util.List;
-
-import io.micrometer.core.instrument.config.MeterFilter;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
-import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
-import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.validation.Validator;
-import org.springframework.web.client.RestTemplate;
 
 import am.ik.openenquete.questionnaire.enums.Difficulty;
 import am.ik.openenquete.questionnaire.enums.Satisfaction;
@@ -33,6 +12,26 @@ import am.ik.openenquete.seminar.SeminarRepository;
 import am.ik.openenquete.session.ResponseForSession;
 import am.ik.openenquete.session.ResponseForSessionRepository;
 import am.ik.openenquete.session.Session;
+import io.micrometer.core.instrument.config.MeterFilter;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
+import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
+import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.validation.Validator;
+import org.springframework.web.client.RestTemplate;
+
+import static java.util.Arrays.asList;
 
 @SpringBootApplication
 @EntityScan(basePackageClasses = { EnqueteApplication.class, Jsr310JpaConverters.class })
@@ -101,7 +100,7 @@ public class EnqueteApplication {
 	}
 
 	@Configuration
-	public static class RestConfig extends RepositoryRestConfigurerAdapter {
+	public static class RestConfig implements RepositoryRestConfigurer {
 		private final Validator validator;
 
 		public RestConfig(@Lazy @Qualifier("mvcValidator") Validator validator) {

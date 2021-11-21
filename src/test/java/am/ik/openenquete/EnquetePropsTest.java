@@ -2,12 +2,12 @@ package am.ik.openenquete;
 
 import am.ik.openenquete.EnqueteProps.QrCode;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class EnquetePropsTest {
 
     @Test
-    public void colorTest() {
+	void colorTest() {
         final QrCode qrCode = new QrCode();
         // Black
         qrCode.setRed(0);

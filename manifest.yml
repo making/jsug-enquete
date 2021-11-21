@@ -6,4 +6,5 @@ applications:
   services:
   - jsug-enquete-db # cf create-service p-mysql 100mb-dev jsug-enquete-db
   env:
-    enquete.googl.api-key: AIzaSyACagq02VhyU4vgiRvuSKKFKhT3QCDRhkE
+    JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+    SPRING_PROFILES_ACTIVE: cloud
