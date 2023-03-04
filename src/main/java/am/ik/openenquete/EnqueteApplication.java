@@ -45,51 +45,84 @@ public class EnqueteApplication {
 	@Bean
 	CommandLineRunner runner(SeminarRepository seminarRepository,
 			ResponseForSeminarRepository responseForSeminarRepository,
-			ResponseForSessionRepository responseForSessionRepository,
-			TransactionTemplate tx) {
+			ResponseForSessionRepository responseForSessionRepository, TransactionTemplate tx) {
 		return a -> tx.execute(st -> {
 			if (seminarRepository.count() > 0) {
 				return null;
 			}
 			// Add test data if empty
 			List<Session> sessions = asList(
-					Session.builder().sessionName("1. はじめてのセッション")
-							.speakerDisplayNames(asList("Taro Yamada", "Ichiro Suzuki"))
-							.speakers(asList("foo", "making")).build(),
-					Session.builder().sessionName("2. Hello World!")
-							.speakerDisplayNames(asList("Taro Yamada", "Ichiro Tanaka"))
-							.speakers(asList("foo", "makits")).build());
-			Seminar seminar = Seminar.builder().seminarName("サンプル勉強会").sessions(sessions)
-					.seminarDate(LocalDate.of(2016, 12, 3)).build();
+					Session.builder()
+						.sessionName("1. はじめてのセッション")
+						.speakerDisplayNames(asList("Taro Yamada", "Ichiro Suzuki"))
+						.speakers(asList("foo", "making"))
+						.build(),
+					Session.builder()
+						.sessionName("2. Hello World!")
+						.speakerDisplayNames(asList("Taro Yamada", "Ichiro Tanaka"))
+						.speakers(asList("foo", "makits"))
+						.build());
+			Seminar seminar = Seminar.builder()
+				.seminarName("サンプル勉強会")
+				.sessions(sessions)
+				.seminarDate(LocalDate.of(2016, 12, 3))
+				.build();
 			sessions.forEach(session -> session.setSeminar(seminar));
 			Seminar created = seminarRepository.save(seminar);
 
-			responseForSeminarRepository.save(
-					ResponseForSeminar.builder().comment("ナイスです。").request("Wifiが欲しい。")
-							.satisfaction(Satisfaction.GOOD).seminar(created).build());
-			responseForSeminarRepository
-					.save(ResponseForSeminar.builder().comment("ダメでした").request("休憩が欲しい。")
-							.satisfaction(Satisfaction.BAD).seminar(created).build());
-			responseForSeminarRepository.save(ResponseForSeminar.builder().comment("")
-					.request("").satisfaction(Satisfaction.EXCELLENT).seminar(created)
-					.build());
-			responseForSeminarRepository
-					.save(ResponseForSeminar.builder().comment("++").request("hoge")
-							.satisfaction(Satisfaction.BAD).seminar(created).build());
+			responseForSeminarRepository.save(ResponseForSeminar.builder()
+				.comment("ナイスです。")
+				.request("Wifiが欲しい。")
+				.satisfaction(Satisfaction.GOOD)
+				.seminar(created)
+				.build());
+			responseForSeminarRepository.save(ResponseForSeminar.builder()
+				.comment("ダメでした")
+				.request("休憩が欲しい。")
+				.satisfaction(Satisfaction.BAD)
+				.seminar(created)
+				.build());
+			responseForSeminarRepository.save(ResponseForSeminar.builder()
+				.comment("")
+				.request("")
+				.satisfaction(Satisfaction.EXCELLENT)
+				.seminar(created)
+				.build());
+			responseForSeminarRepository.save(ResponseForSeminar.builder()
+				.comment("++")
+				.request("hoge")
+				.satisfaction(Satisfaction.BAD)
+				.seminar(created)
+				.build());
 
 			responseForSessionRepository.save(ResponseForSession.builder()
-					.comment("お疲れ様でした").difficulty(Difficulty.MODERATE)
-					.satisfaction(Satisfaction.EXCELLENT).username("foo")
-					.session(sessions.get(0)).build());
-			responseForSessionRepository.save(ResponseForSession.builder().comment("")
-					.difficulty(Difficulty.EASY).satisfaction(Satisfaction.GOOD)
-					.username("bar").session(sessions.get(0)).build());
-			responseForSessionRepository.save(ResponseForSession.builder().comment("")
-					.difficulty(Difficulty.EASY).satisfaction(Satisfaction.BAD)
-					.username("making").session(sessions.get(1)).build());
-			responseForSessionRepository.save(ResponseForSession.builder().comment("")
-					.difficulty(Difficulty.VERY_EASY).satisfaction(Satisfaction.TERRIBLE)
-					.username("bar").session(sessions.get(1)).build());
+				.comment("お疲れ様でした")
+				.difficulty(Difficulty.MODERATE)
+				.satisfaction(Satisfaction.EXCELLENT)
+				.username("foo")
+				.session(sessions.get(0))
+				.build());
+			responseForSessionRepository.save(ResponseForSession.builder()
+				.comment("")
+				.difficulty(Difficulty.EASY)
+				.satisfaction(Satisfaction.GOOD)
+				.username("bar")
+				.session(sessions.get(0))
+				.build());
+			responseForSessionRepository.save(ResponseForSession.builder()
+				.comment("")
+				.difficulty(Difficulty.EASY)
+				.satisfaction(Satisfaction.BAD)
+				.username("making")
+				.session(sessions.get(1))
+				.build());
+			responseForSessionRepository.save(ResponseForSession.builder()
+				.comment("")
+				.difficulty(Difficulty.VERY_EASY)
+				.satisfaction(Satisfaction.TERRIBLE)
+				.username("bar")
+				.session(sessions.get(1))
+				.build());
 			return null;
 		});
 	}
@@ -101,6 +134,7 @@ public class EnqueteApplication {
 
 	@Configuration
 	public static class RestConfig implements RepositoryRestConfigurer {
+
 		private final Validator validator;
 
 		public RestConfig(@Lazy @Qualifier("mvcValidator") Validator validator) {
@@ -108,8 +142,7 @@ public class EnqueteApplication {
 		}
 
 		@Override
-		public void configureValidatingRepositoryEventListener(
-				ValidatingRepositoryEventListener validatingListener) {
+		public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
 			validatingListener.addValidator("beforeCreate", validator);
 			validatingListener.addValidator("beforeSave", validator);
 		}
@@ -123,4 +156,5 @@ public class EnqueteApplication {
 			return uri != null && (uri.startsWith("/actuator") || uri.startsWith("/cloudfoundryapplication"));
 		});
 	}
+
 }

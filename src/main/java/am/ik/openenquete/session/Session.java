@@ -19,31 +19,39 @@ import java.util.UUID;
 
 @Entity
 public class Session implements Serializable {
+
 	@Id
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	@GeneratedValue(generator = "uuid")
 	@Column(columnDefinition = "binary(16)")
 	private UUID sessionId;
+
 	private String sessionName;
+
 	@ElementCollection
 	@CollectionTable(joinColumns = @JoinColumn(name = "session_id"))
 	@Column(name = "speaker")
 	@OrderBy("speaker ASC")
 	private List<String> speakers;
+
 	@ElementCollection
 	@CollectionTable(joinColumns = @JoinColumn(name = "session_id"))
 	@Column(name = "speaker_display_name")
 	@OrderBy("speaker_display_name ASC")
 	private List<String> speakerDisplayNames;
+
 	@ManyToOne
 	@JoinColumn(name = "seminar_id")
 	private Seminar seminar;
+
 	@Column(insertable = false, updatable = false)
 	private Instant updatedAt;
+
 	@Column(insertable = false, updatable = false)
 	private Instant createdAt;
 
-	public Session(UUID sessionId, String sessionName, List<String> speakers, List<String> speakerDisplayNames, Seminar seminar, Instant updatedAt, Instant createdAt) {
+	public Session(UUID sessionId, String sessionName, List<String> speakers, List<String> speakerDisplayNames,
+			Seminar seminar, Instant updatedAt, Instant createdAt) {
 		this.sessionId = sessionId;
 		this.sessionName = sessionName;
 		this.speakers = speakers;
@@ -88,7 +96,8 @@ public class Session implements Serializable {
 		}
 		final Object this$speakerDisplayNames = this.getSpeakerDisplayNames();
 		final Object other$speakerDisplayNames = other.getSpeakerDisplayNames();
-		if (this$speakerDisplayNames == null ? other$speakerDisplayNames != null : !this$speakerDisplayNames.equals(other$speakerDisplayNames)) {
+		if (this$speakerDisplayNames == null ? other$speakerDisplayNames != null
+				: !this$speakerDisplayNames.equals(other$speakerDisplayNames)) {
 			return false;
 		}
 		final Object this$updatedAt = this.getUpdatedAt();
@@ -155,7 +164,9 @@ public class Session implements Serializable {
 	}
 
 	public String toString() {
-		return "Session(sessionId=" + this.getSessionId() + ", sessionName=" + this.getSessionName() + ", speakers=" + this.getSpeakers() + ", speakerDisplayNames=" + this.getSpeakerDisplayNames() + ", updatedAt=" + this.getUpdatedAt() + ", createdAt=" + this.getCreatedAt() + ")";
+		return "Session(sessionId=" + this.getSessionId() + ", sessionName=" + this.getSessionName() + ", speakers="
+				+ this.getSpeakers() + ", speakerDisplayNames=" + this.getSpeakerDisplayNames() + ", updatedAt="
+				+ this.getUpdatedAt() + ", createdAt=" + this.getCreatedAt() + ")";
 	}
 
 	protected boolean canEqual(final Object other) {
@@ -216,13 +227,16 @@ public class Session implements Serializable {
 		}
 
 		public String toString() {
-			return "Session.SessionBuilder(sessionId=" + this.sessionId + ", sessionName=" + this.sessionName + ", speakers=" + this.speakers + ", speakerDisplayNames=" + this.speakerDisplayNames +
-				", seminar=" + this.seminar + ", updatedAt=" + this.updatedAt + ", createdAt=" + this.createdAt + ")";
+			return "Session.SessionBuilder(sessionId=" + this.sessionId + ", sessionName=" + this.sessionName
+					+ ", speakers=" + this.speakers + ", speakerDisplayNames=" + this.speakerDisplayNames + ", seminar="
+					+ this.seminar + ", updatedAt=" + this.updatedAt + ", createdAt=" + this.createdAt + ")";
 		}
 
 		public Session.SessionBuilder updatedAt(Instant updatedAt) {
 			this.updatedAt = updatedAt;
 			return this;
 		}
+
 	}
+
 }

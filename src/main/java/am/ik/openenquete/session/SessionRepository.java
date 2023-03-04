@@ -17,4 +17,5 @@ public interface SessionRepository extends Repository<Session, UUID> {
 	void deleteBySessionId(UUID id);
 
 	List<Session> findBySpeakers(String speaker);
+
 }

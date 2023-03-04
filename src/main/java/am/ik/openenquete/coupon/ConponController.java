@@ -10,16 +10,17 @@ import java.util.UUID;
 @Controller
 public class ConponController {
 
-    private final CouponRepository couponRepository;
+	private final CouponRepository couponRepository;
 
-    public ConponController(CouponRepository couponRepository) {
-        this.couponRepository = couponRepository;
-    }
+	public ConponController(CouponRepository couponRepository) {
+		this.couponRepository = couponRepository;
+	}
 
-    @GetMapping(path = "/coupons/{couponId}")
-    public String showCoupon(@PathVariable("couponId") UUID couponId, Model model) {
-        Coupon coupon = this.couponRepository.findById(couponId).get();
-        model.addAttribute("coupon", coupon);
-        return "coupon";
-    }
+	@GetMapping(path = "/coupons/{couponId}")
+	public String showCoupon(@PathVariable("couponId") UUID couponId, Model model) {
+		Coupon coupon = this.couponRepository.findById(couponId).get();
+		model.addAttribute("coupon", coupon);
+		return "coupon";
+	}
+
 }

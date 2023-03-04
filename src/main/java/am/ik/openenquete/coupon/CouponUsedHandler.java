@@ -12,20 +12,21 @@ import java.util.Optional;
 @Component
 public class CouponUsedHandler {
 
-    private final MeterRegistry meterRegistry;
+	private final MeterRegistry meterRegistry;
 
-    private final CouponRepository couponRepository;
+	private final CouponRepository couponRepository;
 
-    public CouponUsedHandler(MeterRegistry meterRegistry, CouponRepository couponRepository) {
-        this.meterRegistry = meterRegistry;
-        this.couponRepository = couponRepository;
-    }
+	public CouponUsedHandler(MeterRegistry meterRegistry, CouponRepository couponRepository) {
+		this.meterRegistry = meterRegistry;
+		this.couponRepository = couponRepository;
+	}
 
-    @HandleAfterCreate
-    public void createCouponForSeminar(CouponUsed couponUsed) {
-        Optional<Coupon> coupon = this.couponRepository.findById(couponUsed.getCoupon().getCouponId());
-        coupon.map(Coupon::getSeminar)
-            .map(Seminar::getSeminarId)
-            .ifPresent(id -> this.meterRegistry.counter("coupon_used", "seminar_id", id.toString()).increment());
-    }
+	@HandleAfterCreate
+	public void createCouponForSeminar(CouponUsed couponUsed) {
+		Optional<Coupon> coupon = this.couponRepository.findById(couponUsed.getCoupon().getCouponId());
+		coupon.map(Coupon::getSeminar)
+			.map(Seminar::getSeminarId)
+			.ifPresent(id -> this.meterRegistry.counter("coupon_used", "seminar_id", id.toString()).increment());
+	}
+
 }

@@ -19,10 +19,13 @@ import java.util.List;
 public class HomeController {
 
 	private final SeminarRepository seminarRepository;
+
 	private final SessionRepository sessionRepository;
+
 	private final EnqueteProps props;
 
-	public HomeController(SeminarRepository seminarRepository, SessionRepository sessionRepository, EnqueteProps props) {
+	public HomeController(SeminarRepository seminarRepository, SessionRepository sessionRepository,
+			EnqueteProps props) {
 		this.seminarRepository = seminarRepository;
 		this.sessionRepository = sessionRepository;
 		this.props = props;
@@ -31,8 +34,7 @@ public class HomeController {
 	@GetMapping("/")
 	String index(Model model, @AuthenticationPrincipal EnqueteUser user,
 			@PageableDefault(sort = "seminarDate", direction = Sort.Direction.DESC, size = 3) Pageable pageable) {
-		Page<Seminar> openSeminars = seminarRepository
-				.findBySeminarClosedIsNull(pageable);
+		Page<Seminar> openSeminars = seminarRepository.findBySeminarClosedIsNull(pageable);
 		List<Session> sessions = sessionRepository.findBySpeakers(user.getGithub());
 
 		model.addAttribute("openSeminars", openSeminars.getContent());
@@ -45,4 +47,5 @@ public class HomeController {
 		}
 		return "index";
 	}
+
 }

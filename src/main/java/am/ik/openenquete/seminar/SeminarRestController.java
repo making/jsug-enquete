@@ -12,23 +12,20 @@ import java.util.stream.Collectors;
 @RestController
 public class SeminarRestController {
 
-    private final SeminarReportService seminarReportService;
+	private final SeminarReportService seminarReportService;
 
-    public SeminarRestController(SeminarReportService seminarReportService) {
-        this.seminarReportService = seminarReportService;
-    }
+	public SeminarRestController(SeminarReportService seminarReportService) {
+		this.seminarReportService = seminarReportService;
+	}
 
-    @GetMapping(path = "v1/seminars/{seminarId}/votes")
-    public Object votes(@PathVariable("seminarId") UUID seminarId) {
-        return this.seminarReportService.satisfactionReport(seminarId)
-            .entrySet()
-            .stream()
-            .map(e -> {
-                Map<String, Object> item = new LinkedHashMap<>();
-                item.put("session", e.getKey());
-                item.put("summary", e.getValue());
-                return item;
-            })
-            .collect(Collectors.toList());
-    }
+	@GetMapping(path = "v1/seminars/{seminarId}/votes")
+	public Object votes(@PathVariable("seminarId") UUID seminarId) {
+		return this.seminarReportService.satisfactionReport(seminarId).entrySet().stream().map(e -> {
+			Map<String, Object> item = new LinkedHashMap<>();
+			item.put("session", e.getKey());
+			item.put("summary", e.getValue());
+			return item;
+		}).collect(Collectors.toList());
+	}
+
 }

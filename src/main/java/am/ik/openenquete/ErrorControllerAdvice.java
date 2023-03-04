@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice(annotations = Controller.class)
 public class ErrorControllerAdvice {
+
 	private final Environment env;
 
 	public ErrorControllerAdvice(Environment env) {
@@ -23,20 +24,21 @@ public class ErrorControllerAdvice {
 	@ExceptionHandler(NoSuchElementException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	String noSuchEelemtException(NoSuchElementException e, Model model) {
-		//addErrors(e, HttpStatus.NOT_FOUND, model);
+		// addErrors(e, HttpStatus.NOT_FOUND, model);
 		return "error/404";
 	}
 
 	void addErrors(Exception e, HttpStatus status, Model model) {
-if (env.acceptsProfiles("default")) {
-	StringWriter stackTrace = new StringWriter();
-	e.printStackTrace(new PrintWriter(stackTrace));
-	stackTrace.flush();
-	model.addAttribute("status", status.value());
-	model.addAttribute("error", status.getReasonPhrase());
-	model.addAttribute("exception", e.getClass());
-	model.addAttribute("message", e.getMessage());
-	model.addAttribute("trace", stackTrace.toString());
-}
+		if (env.acceptsProfiles("default")) {
+			StringWriter stackTrace = new StringWriter();
+			e.printStackTrace(new PrintWriter(stackTrace));
+			stackTrace.flush();
+			model.addAttribute("status", status.value());
+			model.addAttribute("error", status.getReasonPhrase());
+			model.addAttribute("exception", e.getClass());
+			model.addAttribute("message", e.getMessage());
+			model.addAttribute("trace", stackTrace.toString());
+		}
 	}
+
 }

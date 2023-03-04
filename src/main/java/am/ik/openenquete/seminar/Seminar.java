@@ -21,24 +21,32 @@ import java.util.UUID;
 
 @Entity
 public class Seminar implements Serializable {
+
 	@Id
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	@GeneratedValue(generator = "uuid")
 	@Column(columnDefinition = "binary(16)")
 	private UUID seminarId;
+
 	private String seminarName;
+
 	private LocalDate seminarDate;
+
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "seminar")
 	@OrderBy("sessionName ASC")
 	private List<Session> sessions;
+
 	@OneToOne(mappedBy = "seminar", cascade = CascadeType.ALL, orphanRemoval = true)
 	private SeminarClosed seminarClosed;
+
 	@Column(insertable = false, updatable = false)
 	private Instant updatedAt;
+
 	@Column(insertable = false, updatable = false)
 	private Instant createdAt;
 
-	public Seminar(UUID seminarId, String seminarName, LocalDate seminarDate, List<Session> sessions, SeminarClosed seminarClosed, Instant updatedAt, Instant createdAt) {
+	public Seminar(UUID seminarId, String seminarName, LocalDate seminarDate, List<Session> sessions,
+			SeminarClosed seminarClosed, Instant updatedAt, Instant createdAt) {
 		this.seminarId = seminarId;
 		this.seminarName = seminarName;
 		this.seminarDate = seminarDate;
@@ -88,7 +96,8 @@ public class Seminar implements Serializable {
 		}
 		final Object this$seminarClosed = this.getSeminarClosed();
 		final Object other$seminarClosed = other.getSeminarClosed();
-		if (this$seminarClosed == null ? other$seminarClosed != null : !this$seminarClosed.equals(other$seminarClosed)) {
+		if (this$seminarClosed == null ? other$seminarClosed != null
+				: !this$seminarClosed.equals(other$seminarClosed)) {
 			return false;
 		}
 		final Object this$updatedAt = this.getUpdatedAt();
@@ -163,8 +172,10 @@ public class Seminar implements Serializable {
 	}
 
 	public String toString() {
-		return "Seminar(seminarId=" + this.getSeminarId() + ", seminarName=" + this.getSeminarName() + ", seminarDate=" + this.getSeminarDate() + ", sessions=" + this.getSessions() + ", " +
-			"seminarClosed=" + this.getSeminarClosed() + ", updatedAt=" + this.getUpdatedAt() + ", createdAt=" + this.getCreatedAt() + ")";
+		return "Seminar(seminarId=" + this.getSeminarId() + ", seminarName=" + this.getSeminarName() + ", seminarDate="
+				+ this.getSeminarDate() + ", sessions=" + this.getSessions() + ", " + "seminarClosed="
+				+ this.getSeminarClosed() + ", updatedAt=" + this.getUpdatedAt() + ", createdAt=" + this.getCreatedAt()
+				+ ")";
 	}
 
 	protected boolean canEqual(final Object other) {
@@ -225,13 +236,16 @@ public class Seminar implements Serializable {
 		}
 
 		public String toString() {
-			return "Seminar.SeminarBuilder(seminarId=" + this.seminarId + ", seminarName=" + this.seminarName + ", seminarDate=" + this.seminarDate + ", sessions=" + this.sessions + ", seminarClosed" +
-				"=" + this.seminarClosed + ", updatedAt=" + this.updatedAt + ", createdAt=" + this.createdAt + ")";
+			return "Seminar.SeminarBuilder(seminarId=" + this.seminarId + ", seminarName=" + this.seminarName
+					+ ", seminarDate=" + this.seminarDate + ", sessions=" + this.sessions + ", seminarClosed" + "="
+					+ this.seminarClosed + ", updatedAt=" + this.updatedAt + ", createdAt=" + this.createdAt + ")";
 		}
 
 		public Seminar.SeminarBuilder updatedAt(Instant updatedAt) {
 			this.updatedAt = updatedAt;
 			return this;
 		}
+
 	}
+
 }

@@ -8,5 +8,6 @@ import java.util.UUID;
 @RepositoryRestResource(path = "coupon_used")
 public interface CouponUsedRepository extends Repository<CouponUsed, UUID> {
 
-    CouponUsed save(CouponUsed couponUsed);
+	CouponUsed save(CouponUsed couponUsed);
+
 }

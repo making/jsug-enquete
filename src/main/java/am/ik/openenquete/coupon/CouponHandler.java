@@ -19,55 +19,56 @@ import java.util.Optional;
 @Component
 public class CouponHandler {
 
-    private final Logger log = LoggerFactory.getLogger(CouponHandler.class);
+	private final Logger log = LoggerFactory.getLogger(CouponHandler.class);
 
-    private final CouponRepository couponRepository;
+	private final CouponRepository couponRepository;
 
-    private final SessionRepository sessionRepository;
+	private final SessionRepository sessionRepository;
 
-    private final EnqueteProps props;
+	private final EnqueteProps props;
 
-    private final MeterRegistry meterRegistry;
+	private final MeterRegistry meterRegistry;
 
-    public CouponHandler(CouponRepository couponRepository, SessionRepository sessionRepository, EnqueteProps props, MeterRegistry meterRegistry) {
-        this.couponRepository = couponRepository;
-        this.sessionRepository = sessionRepository;
-        this.props = props;
-        this.meterRegistry = meterRegistry;
-    }
+	public CouponHandler(CouponRepository couponRepository, SessionRepository sessionRepository, EnqueteProps props,
+			MeterRegistry meterRegistry) {
+		this.couponRepository = couponRepository;
+		this.sessionRepository = sessionRepository;
+		this.props = props;
+		this.meterRegistry = meterRegistry;
+	}
 
-    @HandleAfterCreate
-    public void createCouponForSeminar(ResponseForSeminar response) {
-        if (!this.props.isCoupon()) {
-            return;
-        }
-        String username = response.getUsername();
-        Optional<Coupon> opt = this.couponRepository.findByUsername(username);
-        if (!opt.isPresent()) {
-            Seminar seminar = response.getSeminar();
-            this.createCoupon(seminar, username);
-        }
-    }
+	@HandleAfterCreate
+	public void createCouponForSeminar(ResponseForSeminar response) {
+		if (!this.props.isCoupon()) {
+			return;
+		}
+		String username = response.getUsername();
+		Optional<Coupon> opt = this.couponRepository.findByUsername(username);
+		if (!opt.isPresent()) {
+			Seminar seminar = response.getSeminar();
+			this.createCoupon(seminar, username);
+		}
+	}
 
-    @HandleAfterCreate
-    public void createCouponForSession(ResponseForSession response) {
-        if (!this.props.isCoupon()) {
-            return;
-        }
-        String username = response.getUsername();
-        Optional<Coupon> opt = this.couponRepository.findByUsername(username);
-        if (!opt.isPresent()) {
-            this.sessionRepository.findBySessionId(response.getSession().getSessionId())
-                .map(Session::getSeminar) //
-                .ifPresent(seminar -> this.createCoupon(seminar, username));
-        }
-    }
+	@HandleAfterCreate
+	public void createCouponForSession(ResponseForSession response) {
+		if (!this.props.isCoupon()) {
+			return;
+		}
+		String username = response.getUsername();
+		Optional<Coupon> opt = this.couponRepository.findByUsername(username);
+		if (!opt.isPresent()) {
+			this.sessionRepository.findBySessionId(response.getSession().getSessionId())
+				.map(Session::getSeminar) //
+				.ifPresent(seminar -> this.createCoupon(seminar, username));
+		}
+	}
 
-    void createCoupon(Seminar seminar, String username) {
-        Coupon coupon = new Coupon(seminar, username);
-        log.info("Create a coupon for {}", username);
-        this.couponRepository.save(coupon);
-        this.meterRegistry.counter("coupon_created", "seminar_id", seminar.getSeminarId().toString()).increment();
-    }
+	void createCoupon(Seminar seminar, String username) {
+		Coupon coupon = new Coupon(seminar, username);
+		log.info("Create a coupon for {}", username);
+		this.couponRepository.save(coupon);
+		this.meterRegistry.counter("coupon_created", "seminar_id", seminar.getSeminarId().toString()).increment();
+	}
 
 }

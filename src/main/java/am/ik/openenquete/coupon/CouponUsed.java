@@ -17,69 +17,70 @@ import java.util.UUID;
 @Entity
 public class CouponUsed implements Serializable {
 
-    @Id
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @GeneratedValue(generator = "uuid")
-    @Column(columnDefinition = "binary(16)")
-    private UUID usedId;
+	@Id
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	@GeneratedValue(generator = "uuid")
+	@Column(columnDefinition = "binary(16)")
+	private UUID usedId;
 
-    @OneToOne
-    @JoinColumn(name = "coupon_id")
-    @RestResource(exported = false)
-    private Coupon coupon;
+	@OneToOne
+	@JoinColumn(name = "coupon_id")
+	@RestResource(exported = false)
+	private Coupon coupon;
 
-    @Column(insertable = false, updatable = false)
-    private Instant updatedAt;
+	@Column(insertable = false, updatable = false)
+	private Instant updatedAt;
 
-    @Column(insertable = false, updatable = false)
-    private Instant createdAt;
+	@Column(insertable = false, updatable = false)
+	private Instant createdAt;
 
-    public UUID getUsedId() {
-        return usedId;
-    }
+	public UUID getUsedId() {
+		return usedId;
+	}
 
-    public void setUsedId(UUID usedId) {
-        this.usedId = usedId;
-    }
+	public void setUsedId(UUID usedId) {
+		this.usedId = usedId;
+	}
 
-    public Coupon getCoupon() {
-        return coupon;
-    }
+	public Coupon getCoupon() {
+		return coupon;
+	}
 
-    public void setCoupon(Coupon coupon) {
-        this.coupon = coupon;
-    }
+	public void setCoupon(Coupon coupon) {
+		this.coupon = coupon;
+	}
 
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
+	public Instant getUpdatedAt() {
+		return updatedAt;
+	}
 
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+	public void setUpdatedAt(Instant updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        CouponUsed that = (CouponUsed) o;
-        return Objects.equals(usedId, that.usedId);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		CouponUsed that = (CouponUsed) o;
+		return Objects.equals(usedId, that.usedId);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(usedId);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(usedId);
+	}
+
 }

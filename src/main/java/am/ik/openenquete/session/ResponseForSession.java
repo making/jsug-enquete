@@ -20,34 +20,43 @@ import java.util.UUID;
 
 @Entity
 public class ResponseForSession implements Serializable, UsernameHolder, IpAddressHolder {
+
 	@Id
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	@GeneratedValue(generator = "uuid")
 	@Column(columnDefinition = "binary(16)")
 	private UUID responseForSessionId;
+
 	@NotNull
 	@Column(columnDefinition = "tinyint")
 	private Satisfaction satisfaction;
+
 	@NotNull
 	@Column(columnDefinition = "tinyint")
 	private Difficulty difficulty;
+
 	private String comment;
+
 	@ManyToOne
 	@JoinColumn(name = "session_id", updatable = false)
 	@NotNull
 	@RestResource(exported = false)
 	private Session session;
+
 	@Column(updatable = false)
 	private String username;
+
 	@Column(updatable = false)
 	private String ipAddress;
+
 	@Column(insertable = false, updatable = false)
 	private Instant updatedAt;
+
 	@Column(insertable = false, updatable = false)
 	private Instant createdAt;
 
-	public ResponseForSession(UUID responseForSessionId, Satisfaction satisfaction, Difficulty difficulty, String comment, Session session, String username, String ipAddress, Instant updatedAt,
-							  Instant createdAt) {
+	public ResponseForSession(UUID responseForSessionId, Satisfaction satisfaction, Difficulty difficulty,
+			String comment, Session session, String username, String ipAddress, Instant updatedAt, Instant createdAt) {
 		this.responseForSessionId = responseForSessionId;
 		this.satisfaction = satisfaction;
 		this.difficulty = difficulty;
@@ -79,7 +88,8 @@ public class ResponseForSession implements Serializable, UsernameHolder, IpAddre
 		}
 		final Object this$responseForSessionId = this.getResponseForSessionId();
 		final Object other$responseForSessionId = other.getResponseForSessionId();
-		if (this$responseForSessionId == null ? other$responseForSessionId != null : !this$responseForSessionId.equals(other$responseForSessionId)) {
+		if (this$responseForSessionId == null ? other$responseForSessionId != null
+				: !this$responseForSessionId.equals(other$responseForSessionId)) {
 			return false;
 		}
 		final Object this$satisfaction = this.getSatisfaction();
@@ -194,7 +204,11 @@ public class ResponseForSession implements Serializable, UsernameHolder, IpAddre
 	}
 
 	public String toString() {
-		return "ResponseForSession(responseForSessionId=" + this.getResponseForSessionId() + ", satisfaction=" + this.getSatisfaction() + ", difficulty=" + this.getDifficulty() + ", comment=" + this.getComment() + ", session=" + this.getSession() + ", username=" + this.getUsername() + ", ipAddress=" + this.getIpAddress() + ", updatedAt=" + this.getUpdatedAt() + ", createdAt=" + this.getCreatedAt() + ")";
+		return "ResponseForSession(responseForSessionId=" + this.getResponseForSessionId() + ", satisfaction="
+				+ this.getSatisfaction() + ", difficulty=" + this.getDifficulty() + ", comment=" + this.getComment()
+				+ ", session=" + this.getSession() + ", username=" + this.getUsername() + ", ipAddress="
+				+ this.getIpAddress() + ", updatedAt=" + this.getUpdatedAt() + ", createdAt=" + this.getCreatedAt()
+				+ ")";
 	}
 
 	protected boolean canEqual(final Object other) {
@@ -225,7 +239,8 @@ public class ResponseForSession implements Serializable, UsernameHolder, IpAddre
 		}
 
 		public ResponseForSession build() {
-			return new ResponseForSession(responseForSessionId, satisfaction, difficulty, comment, session, username, ipAddress, updatedAt, createdAt);
+			return new ResponseForSession(responseForSessionId, satisfaction, difficulty, comment, session, username,
+					ipAddress, updatedAt, createdAt);
 		}
 
 		public ResponseForSession.ResponseForSessionBuilder comment(String comment) {
@@ -264,8 +279,10 @@ public class ResponseForSession implements Serializable, UsernameHolder, IpAddre
 		}
 
 		public String toString() {
-			return "ResponseForSession.ResponseForSessionBuilder(responseForSessionId=" + this.responseForSessionId + ", satisfaction=" + this.satisfaction + ", difficulty=" + this.difficulty + ", " +
-				"comment=" + this.comment + ", session=" + this.session + ", username=" + this.username + ", ipAddress=" + this.ipAddress + ", updatedAt=" + this.updatedAt + ", createdAt=" + this.createdAt + ")";
+			return "ResponseForSession.ResponseForSessionBuilder(responseForSessionId=" + this.responseForSessionId
+					+ ", satisfaction=" + this.satisfaction + ", difficulty=" + this.difficulty + ", " + "comment="
+					+ this.comment + ", session=" + this.session + ", username=" + this.username + ", ipAddress="
+					+ this.ipAddress + ", updatedAt=" + this.updatedAt + ", createdAt=" + this.createdAt + ")";
 		}
 
 		public ResponseForSession.ResponseForSessionBuilder updatedAt(Instant updatedAt) {
@@ -277,5 +294,7 @@ public class ResponseForSession implements Serializable, UsernameHolder, IpAddre
 			this.username = username;
 			return this;
 		}
+
 	}
+
 }

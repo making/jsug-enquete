@@ -3,7 +3,9 @@ package am.ik.openenquete.questionnaire.enums;
 import java.util.Comparator;
 
 public enum Difficulty implements Comparator<Difficulty>, Comparable<Difficulty> {
+
 	VERY_HARD(5), HARD(4), MODERATE(3), EASY(2), VERY_EASY(1);
+
 	private final int value;
 
 	Difficulty(int value) {
@@ -22,4 +24,5 @@ public enum Difficulty implements Comparator<Difficulty>, Comparable<Difficulty>
 	public int getValue() {
 		return this.value;
 	}
+
 }

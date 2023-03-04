@@ -8,6 +8,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(path = "seminar_closed")
 public interface SeminarClosedRepository extends CrudRepository<SeminarClosed, UUID> {
+
 	Optional<SeminarClosed> findByClosedId(UUID id);
 
 	SeminarClosed save(SeminarClosed closed);
@@ -15,4 +16,5 @@ public interface SeminarClosedRepository extends CrudRepository<SeminarClosed, U
 	default void delete(SeminarClosed c) {
 		findByClosedId(c.getClosedId()).ifPresent(closed -> closed.getSeminar().setSeminarClosed(null));
 	}
+
 }

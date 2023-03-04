@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @RepositoryEventHandler
 @Component
 public class UsernameHandler {
+
 	private final ContextUsername contextUsername;
 
 	public UsernameHandler(ContextUsername contextUsername) {
@@ -19,4 +20,5 @@ public class UsernameHandler {
 	public void setUsername(UsernameHolder response) {
 		response.setUsername(contextUsername.getUsername());
 	}
+
 }

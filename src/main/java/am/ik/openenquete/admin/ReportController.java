@@ -25,12 +25,17 @@ import java.util.stream.Stream;
 
 @Controller
 public class ReportController {
+
 	private final SeminarRepository seminarRepository;
+
 	private final SeminarReportService seminarReportService;
+
 	private final ObjectMapper objectMapper;
+
 	private final MessageSource messageSource;
 
-	public ReportController(SeminarRepository seminarRepository, SeminarReportService seminarReportService, ObjectMapper objectMapper, MessageSource messageSource) {
+	public ReportController(SeminarRepository seminarRepository, SeminarReportService seminarReportService,
+			ObjectMapper objectMapper, MessageSource messageSource) {
 		this.seminarRepository = seminarRepository;
 		this.seminarReportService = seminarReportService;
 		this.objectMapper = objectMapper;
@@ -38,49 +43,42 @@ public class ReportController {
 	}
 
 	@GetMapping("admin/seminars/{seminarId}/report")
-	String report(@PathVariable UUID seminarId, Model model, Locale locale)
-			throws IOException {
+	String report(@PathVariable UUID seminarId, Model model, Locale locale) throws IOException {
 		Seminar seminar = seminarRepository.findBySeminarId(seminarId).get();
 
 		Map<Summary.Session, Summary.SatisfactionReport> satisfactionReport = seminarReportService
-				.satisfactionReport(seminarId);
+			.satisfactionReport(seminarId);
 
 		Map<Summary.Session, Summary.Report<Difficulty>> difficultyReport = seminarReportService
-				.difficultyReport(seminarId);
+			.difficultyReport(seminarId);
 
 		model.addAttribute("seminar", seminar);
 		model.addAttribute("satisfactionReport", satisfactionReport);
 		model.addAttribute("difficultyReport", difficultyReport);
-		model.addAttribute("satisfactionsArray",
-				arrayJsonString(satisfactionReport, Satisfaction.class, locale));
-		model.addAttribute("difficultiesArray",
-				arrayJsonString(difficultyReport, Difficulty.class, locale));
-		model.addAttribute("correlationData", objectMapper.writeValueAsString(
-				correlationData(satisfactionReport, difficultyReport)));
+		model.addAttribute("satisfactionsArray", arrayJsonString(satisfactionReport, Satisfaction.class, locale));
+		model.addAttribute("difficultiesArray", arrayJsonString(difficultyReport, Difficulty.class, locale));
+		model.addAttribute("correlationData",
+				objectMapper.writeValueAsString(correlationData(satisfactionReport, difficultyReport)));
 		return "admin/report";
 	}
 
 	@GetMapping("admin/seminars/report")
 	String report(Model model, Locale locale) throws IOException {
 		Map<Summary.Session, Summary.SatisfactionReport> satisfactionReport = seminarReportService
-				.satisfactionReportAll();
+			.satisfactionReportAll();
 
-		Map<Summary.Session, Summary.Report<Difficulty>> difficultyReport = seminarReportService
-				.difficultyReportAll();
+		Map<Summary.Session, Summary.Report<Difficulty>> difficultyReport = seminarReportService.difficultyReportAll();
 
 		model.addAttribute("satisfactionReport", satisfactionReport);
 		model.addAttribute("difficultyReport", difficultyReport);
-		model.addAttribute("satisfactionsArray",
-				arrayJsonString(satisfactionReport, Satisfaction.class, locale));
-		model.addAttribute("difficultiesArray",
-				arrayJsonString(difficultyReport, Difficulty.class, locale));
-		model.addAttribute("correlationData", objectMapper.writeValueAsString(
-				correlationData(satisfactionReport, difficultyReport)));
+		model.addAttribute("satisfactionsArray", arrayJsonString(satisfactionReport, Satisfaction.class, locale));
+		model.addAttribute("difficultiesArray", arrayJsonString(difficultyReport, Difficulty.class, locale));
+		model.addAttribute("correlationData",
+				objectMapper.writeValueAsString(correlationData(satisfactionReport, difficultyReport)));
 		return "admin/reportAll";
 	}
 
-	<T extends Comparable<T>> String arrayJsonString(
-			Map<Summary.Session, ? extends Summary.Report<T>> map,
+	<T extends Comparable<T>> String arrayJsonString(Map<Summary.Session, ? extends Summary.Report<T>> map,
 			Class<? extends Enum> clazz, Locale locale) throws IOException {
 		List<Object[]> dataList = new ArrayList<>();
 		int len = clazz.getEnumConstants().length;
@@ -108,8 +106,8 @@ public class ReportController {
 		String[] labels = new String[values.length + 1];
 		labels[0] = "Session";
 		for (int i = 0; i < values.length; i++) {
-			labels[i + 1] = messageSource.getMessage(clazz.getSimpleName().toLowerCase()
-					+ "." + values[i].name().toLowerCase(), null, locale);
+			labels[i + 1] = messageSource
+				.getMessage(clazz.getSimpleName().toLowerCase() + "." + values[i].name().toLowerCase(), null, locale);
 		}
 		return labels;
 	}
@@ -120,16 +118,14 @@ public class ReportController {
 		return map;
 	}
 
-	List<Object[]> correlationData(
-			Map<Summary.Session, Summary.SatisfactionReport> satisfactionReport,
+	List<Object[]> correlationData(Map<Summary.Session, Summary.SatisfactionReport> satisfactionReport,
 			Map<Summary.Session, Summary.Report<Difficulty>> difficultyReport) {
 		List<Object[]> data = new ArrayList<>();
 		data.add(new String[] { "満足度", "難易度" });
 		satisfactionReport.forEach((session, satisfaction) -> {
 			Summary.Report<Difficulty> difficulty = difficultyReport.get(session);
 			if (difficulty != null) {
-				data.add(
-						new Object[] { satisfaction.getNsat(), difficulty.getAverage() });
+				data.add(new Object[] { satisfaction.getNsat(), difficulty.getAverage() });
 			}
 		});
 		return data;

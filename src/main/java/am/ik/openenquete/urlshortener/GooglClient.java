@@ -16,10 +16,12 @@ import java.util.Map;
 @Component
 @CacheConfig(cacheNames = "urlshortener")
 public class GooglClient implements UrlShortenerClient {
+
 	private final RestTemplate restTemplate;
+
 	private final EnqueteProps props;
 
-	@java.beans.ConstructorProperties({"restTemplate", "props"})
+	@java.beans.ConstructorProperties({ "restTemplate", "props" })
 	public GooglClient(RestTemplate restTemplate, EnqueteProps props) {
 		this.restTemplate = restTemplate;
 		this.props = props;
@@ -30,9 +32,8 @@ public class GooglClient implements UrlShortenerClient {
 	public String shorten(String longUrl) {
 		Map<String, String> body = Collections.singletonMap("longUrl", longUrl);
 		try {
-			JsonNode response = restTemplate.postForObject(
-					"https://www.googleapis.com/urlshortener/v1/url?key={key}", body,
-					JsonNode.class, props.getGoogl().getApiKey());
+			JsonNode response = restTemplate.postForObject("https://www.googleapis.com/urlshortener/v1/url?key={key}",
+					body, JsonNode.class, props.getGoogl().getApiKey());
 			if (response.has("id")) {
 				return response.get("id").asText();
 			}
@@ -44,4 +45,5 @@ public class GooglClient implements UrlShortenerClient {
 			return null;
 		}
 	}
+
 }

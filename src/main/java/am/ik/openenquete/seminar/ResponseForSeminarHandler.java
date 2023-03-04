@@ -16,4 +16,5 @@ public class ResponseForSeminarHandler {
 			throw new IllegalStateException("The seminar has been closed.");
 		}
 	}
+
 }

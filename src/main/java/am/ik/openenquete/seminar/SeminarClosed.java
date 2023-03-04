@@ -18,17 +18,21 @@ import java.util.UUID;
 
 @Entity
 public class SeminarClosed implements Serializable, UsernameHolder {
+
 	@Id
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	@GeneratedValue(generator = "uuid")
 	@Column(columnDefinition = "binary(16)")
 	private UUID closedId;
+
 	@OneToOne
 	@JoinColumn(name = "seminar_id")
 	@RestResource(exported = false)
 	private Seminar seminar;
+
 	@Column(updatable = false)
 	private String username;
+
 	@Column(insertable = false, updatable = false)
 	private Instant createdAt;
 
@@ -109,7 +113,8 @@ public class SeminarClosed implements Serializable, UsernameHolder {
 	}
 
 	public String toString() {
-		return "SeminarClosed(closedId=" + this.getClosedId() + ", username=" + this.getUsername() + ", createdAt=" + this.getCreatedAt() + ")";
+		return "SeminarClosed(closedId=" + this.getClosedId() + ", username=" + this.getUsername() + ", createdAt="
+				+ this.getCreatedAt() + ")";
 	}
 
 	protected boolean canEqual(final Object other) {
@@ -149,12 +154,15 @@ public class SeminarClosed implements Serializable, UsernameHolder {
 		}
 
 		public String toString() {
-			return "SeminarClosed.SeminarClosedBuilder(closedId=" + this.closedId + ", seminar=" + this.seminar + ", username=" + this.username + ", createdAt=" + this.createdAt + ")";
+			return "SeminarClosed.SeminarClosedBuilder(closedId=" + this.closedId + ", seminar=" + this.seminar
+					+ ", username=" + this.username + ", createdAt=" + this.createdAt + ")";
 		}
 
 		public SeminarClosed.SeminarClosedBuilder username(String username) {
 			this.username = username;
 			return this;
 		}
+
 	}
+
 }

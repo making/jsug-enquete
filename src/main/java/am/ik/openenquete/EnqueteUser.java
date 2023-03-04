@@ -11,57 +11,54 @@ import java.util.Objects;
 
 public class EnqueteUser implements OAuth2User {
 
-    private final String name;
+	private final String name;
 
-    private final String github;
+	private final String github;
 
-    private final String email;
+	private final String email;
 
-    private final String avatarUrl;
+	private final String avatarUrl;
 
-    private final List<GrantedAuthority> authorities;
+	private final List<GrantedAuthority> authorities;
 
-    public EnqueteUser(String name, String github, String email, String avatarUrl, List<GrantedAuthority> authorities) {
-        this.name = Objects.toString(name, github);
-        this.github = github;
-        this.email = email;
-        this.avatarUrl = avatarUrl;
-        this.authorities = authorities;
-    }
+	public EnqueteUser(String name, String github, String email, String avatarUrl, List<GrantedAuthority> authorities) {
+		this.name = Objects.toString(name, github);
+		this.github = github;
+		this.email = email;
+		this.avatarUrl = avatarUrl;
+		this.authorities = authorities;
+	}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return this.authorities;
+	}
 
-    @Override
-    public Map<String, Object> getAttributes() {
-        return Collections.emptyMap();
-    }
+	@Override
+	public Map<String, Object> getAttributes() {
+		return Collections.emptyMap();
+	}
 
-    public String getAvatarUrl() {
-        return this.avatarUrl;
-    }
+	public String getAvatarUrl() {
+		return this.avatarUrl;
+	}
 
-    public String getEmail() {
-        return this.email;
-    }
+	public String getEmail() {
+		return this.email;
+	}
 
-    public String getGithub() {
-        return this.github;
-    }
+	public String getGithub() {
+		return this.github;
+	}
 
-    public String getName() {
-        return this.name;
-    }
+	public String getName() {
+		return this.name;
+	}
 
-    @Override
-    public String toString() {
-        return "EnqueteUser{" +
-            "name='" + name + '\'' +
-            ", github='" + github + '\'' +
-            ", email='" + email + '\'' +
-            ", avatarUrl='" + avatarUrl + '\'' +
-            '}';
-    }
+	@Override
+	public String toString() {
+		return "EnqueteUser{" + "name='" + name + '\'' + ", github='" + github + '\'' + ", email='" + email + '\''
+				+ ", avatarUrl='" + avatarUrl + '\'' + '}';
+	}
+
 }

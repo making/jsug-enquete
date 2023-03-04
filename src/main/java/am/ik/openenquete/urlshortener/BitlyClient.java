@@ -13,7 +13,9 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @CacheConfig(cacheNames = "urlshortener")
 public class BitlyClient implements UrlShortenerClient {
+
 	private final RestTemplate restTemplate;
+
 	private final EnqueteProps props;
 
 	public BitlyClient(RestTemplate restTemplate, EnqueteProps props) {
@@ -26,8 +28,8 @@ public class BitlyClient implements UrlShortenerClient {
 	public String shorten(String longUrl) {
 		try {
 			JsonNode response = restTemplate.getForObject(
-					"https://api-ssl.bitly.com/v3/shorten?access_token={token}&longUrl={url}",
-					JsonNode.class, props.getBitly().getAccessToken(), longUrl);
+					"https://api-ssl.bitly.com/v3/shorten?access_token={token}&longUrl={url}", JsonNode.class,
+					props.getBitly().getAccessToken(), longUrl);
 			if (response.has("data") && response.get("data").has("url")) {
 				return response.get("data").get("url").asText();
 			}
@@ -39,4 +41,5 @@ public class BitlyClient implements UrlShortenerClient {
 			return null;
 		}
 	}
+
 }

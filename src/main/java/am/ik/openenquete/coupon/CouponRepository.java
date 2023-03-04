@@ -10,10 +10,11 @@ import java.util.UUID;
 @RepositoryRestResource(path = "coupons")
 public interface CouponRepository extends Repository<Coupon, UUID> {
 
-    Optional<Coupon> findById(UUID couponId);
+	Optional<Coupon> findById(UUID couponId);
 
-    Optional<Coupon> findByUsername(String username);
+	Optional<Coupon> findByUsername(String username);
 
-    @RestResource(exported = false)
-    Coupon save(Coupon coupon);
+	@RestResource(exported = false)
+	Coupon save(Coupon coupon);
+
 }

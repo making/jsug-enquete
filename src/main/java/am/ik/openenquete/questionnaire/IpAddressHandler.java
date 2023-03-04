@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 @RepositoryEventHandler
 @Component
 public class IpAddressHandler {
+
 	static final String X_FORWARDED_FOR = "X-Forwarded-For";
 
 	private static final Logger log = org.slf4j.LoggerFactory.getLogger(IpAddressHandler.class);
@@ -42,4 +43,5 @@ public class IpAddressHandler {
 			return req.getHeaders().getFirst(X_FORWARDED_FOR);
 		}
 	}
+
 }

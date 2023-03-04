@@ -15,20 +15,19 @@ import am.ik.openenquete.questionnaire.enums.Difficulty;
 import am.ik.openenquete.questionnaire.enums.Satisfaction;
 
 @RepositoryRestResource(path = "responses_for_session")
-public interface ResponseForSessionRepository
-		extends Repository<ResponseForSession, UUID> {
+public interface ResponseForSessionRepository extends Repository<ResponseForSession, UUID> {
+
 	@RestResource(exported = false)
 	@PreAuthorize("hasRole('ADMIN') or @sessionRepository.findBySessionId(#sessionId)?.get()?.speakers?.contains(principal?.github)")
 	List<ResponseForSession> findBySession_SessionId(@Param("sessionId") UUID sessionId);
 
 	@RestResource(exported = false)
 	@PreAuthorize("hasRole('ADMIN')")
-	List<ResponseForSession> findBySession_Seminar_SeminarId(
-			@Param("seminarId") UUID seminarId);
+	List<ResponseForSession> findBySession_Seminar_SeminarId(@Param("seminarId") UUID seminarId);
 
 	@RestResource(exported = false)
-	Optional<ResponseForSession> findBySession_SessionIdAndUsername(
-			@Param("sessionId") UUID sessionId, @Param("username") String username);
+	Optional<ResponseForSession> findBySession_SessionIdAndUsername(@Param("sessionId") UUID sessionId,
+			@Param("username") String username);
 
 	ResponseForSession save(ResponseForSession responseForSession);
 
@@ -46,4 +45,5 @@ public interface ResponseForSessionRepository
 
 	@Query("SELECT s.sessionId AS sessionId, s.sessionName AS sessionName, x.difficulty AS value, COUNT(x.difficulty) AS count, COUNT(x.difficulty) * x.difficulty AS total, x.session.seminar.seminarId AS seminarId, x.session.seminar.seminarName AS seminarName FROM ResponseForSession x JOIN x.session s GROUP BY s.sessionId, x.difficulty")
 	List<Summary<Difficulty>> reportByDifficultyAll();
+
 }

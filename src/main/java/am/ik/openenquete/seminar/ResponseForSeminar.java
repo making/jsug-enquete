@@ -19,32 +19,41 @@ import java.util.UUID;
 
 @Entity
 public class ResponseForSeminar implements Serializable, UsernameHolder, IpAddressHolder {
+
 	@Id
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	@GeneratedValue(generator = "uuid")
 	@Column(columnDefinition = "binary(16)")
 	private UUID responseForSeminarId;
+
 	@NotNull
 	@Column(columnDefinition = "tinyint")
 	private Satisfaction satisfaction;
+
 	private String request;
+
 	private String comment;
+
 	@ManyToOne
 	@JoinColumn(name = "seminar_id", updatable = false)
 	@NotNull
 	@RestResource(exported = false)
 	private Seminar seminar;
+
 	@Column(updatable = false)
 	private String username;
+
 	@Column(updatable = false)
 	private String ipAddress;
+
 	@Column(insertable = false, updatable = false)
 	private Instant updatedAt;
+
 	@Column(insertable = false, updatable = false)
 	private Instant createdAt;
 
-	public ResponseForSeminar(UUID responseForSeminarId, Satisfaction satisfaction, String request, String comment, Seminar seminar, String username, String ipAddress, Instant updatedAt,
-							  Instant createdAt) {
+	public ResponseForSeminar(UUID responseForSeminarId, Satisfaction satisfaction, String request, String comment,
+			Seminar seminar, String username, String ipAddress, Instant updatedAt, Instant createdAt) {
 		this.responseForSeminarId = responseForSeminarId;
 		this.satisfaction = satisfaction;
 		this.request = request;
@@ -76,7 +85,8 @@ public class ResponseForSeminar implements Serializable, UsernameHolder, IpAddre
 		}
 		final Object this$responseForSeminarId = this.getResponseForSeminarId();
 		final Object other$responseForSeminarId = other.getResponseForSeminarId();
-		if (this$responseForSeminarId == null ? other$responseForSeminarId != null : !this$responseForSeminarId.equals(other$responseForSeminarId)) {
+		if (this$responseForSeminarId == null ? other$responseForSeminarId != null
+				: !this$responseForSeminarId.equals(other$responseForSeminarId)) {
 			return false;
 		}
 		final Object this$satisfaction = this.getSatisfaction();
@@ -191,7 +201,11 @@ public class ResponseForSeminar implements Serializable, UsernameHolder, IpAddre
 	}
 
 	public String toString() {
-		return "ResponseForSeminar(responseForSeminarId=" + this.getResponseForSeminarId() + ", satisfaction=" + this.getSatisfaction() + ", request=" + this.getRequest() + ", comment=" + this.getComment() + ", seminar=" + this.getSeminar() + ", username=" + this.getUsername() + ", ipAddress=" + this.getIpAddress() + ", updatedAt=" + this.getUpdatedAt() + ", createdAt=" + this.getCreatedAt() + ")";
+		return "ResponseForSeminar(responseForSeminarId=" + this.getResponseForSeminarId() + ", satisfaction="
+				+ this.getSatisfaction() + ", request=" + this.getRequest() + ", comment=" + this.getComment()
+				+ ", seminar=" + this.getSeminar() + ", username=" + this.getUsername() + ", ipAddress="
+				+ this.getIpAddress() + ", updatedAt=" + this.getUpdatedAt() + ", createdAt=" + this.getCreatedAt()
+				+ ")";
 	}
 
 	protected boolean canEqual(final Object other) {
@@ -222,7 +236,8 @@ public class ResponseForSeminar implements Serializable, UsernameHolder, IpAddre
 		}
 
 		public ResponseForSeminar build() {
-			return new ResponseForSeminar(responseForSeminarId, satisfaction, request, comment, seminar, username, ipAddress, updatedAt, createdAt);
+			return new ResponseForSeminar(responseForSeminarId, satisfaction, request, comment, seminar, username,
+					ipAddress, updatedAt, createdAt);
 		}
 
 		public ResponseForSeminar.ResponseForSeminarBuilder comment(String comment) {
@@ -261,8 +276,10 @@ public class ResponseForSeminar implements Serializable, UsernameHolder, IpAddre
 		}
 
 		public String toString() {
-			return "ResponseForSeminar.ResponseForSeminarBuilder(responseForSeminarId=" + this.responseForSeminarId + ", satisfaction=" + this.satisfaction + ", request=" + this.request + ", comment" +
-				"=" + this.comment + ", seminar=" + this.seminar + ", username=" + this.username + ", ipAddress=" + this.ipAddress + ", updatedAt=" + this.updatedAt + ", createdAt=" + this.createdAt + ")";
+			return "ResponseForSeminar.ResponseForSeminarBuilder(responseForSeminarId=" + this.responseForSeminarId
+					+ ", satisfaction=" + this.satisfaction + ", request=" + this.request + ", comment" + "="
+					+ this.comment + ", seminar=" + this.seminar + ", username=" + this.username + ", ipAddress="
+					+ this.ipAddress + ", updatedAt=" + this.updatedAt + ", createdAt=" + this.createdAt + ")";
 		}
 
 		public ResponseForSeminar.ResponseForSeminarBuilder updatedAt(Instant updatedAt) {
@@ -274,5 +291,7 @@ public class ResponseForSeminar implements Serializable, UsernameHolder, IpAddre
 			this.username = username;
 			return this;
 		}
+
 	}
+
 }

@@ -9,9 +9,9 @@ import am.ik.openenquete.EnqueteUser;
 
 @Component
 public class ContextUsername {
+
 	public String getUsername() {
-		Authentication authentication = SecurityContextHolder.getContext()
-				.getAuthentication();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null && authentication.getPrincipal() instanceof EnqueteUser) {
 			EnqueteUser user = EnqueteUser.class.cast(authentication.getPrincipal());
 			return user.getGithub();
@@ -21,4 +21,5 @@ public class ContextUsername {
 			return RequestContextHolder.currentRequestAttributes().getSessionId();
 		}
 	}
+
 }

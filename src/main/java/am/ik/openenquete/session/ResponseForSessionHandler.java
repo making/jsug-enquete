@@ -24,53 +24,56 @@ import java.util.UUID;
 @Component
 public class ResponseForSessionHandler {
 
-    private final SeminarRepository seminarRepository;
+	private final SeminarRepository seminarRepository;
 
-    private final SessionRepository sessionRepository;
+	private final SessionRepository sessionRepository;
 
-    private final RestTemplate restTemplate;
+	private final RestTemplate restTemplate;
 
-    private final EnqueteProps props;
+	private final EnqueteProps props;
 
-    private final Logger log = LoggerFactory.getLogger(ResponseForSessionHandler.class);
+	private final Logger log = LoggerFactory.getLogger(ResponseForSessionHandler.class);
 
-    public ResponseForSessionHandler(SeminarRepository seminarRepository, SessionRepository sessionRepository, RestTemplateBuilder builder, EnqueteProps props) {
-        this.seminarRepository = seminarRepository;
-        this.sessionRepository = sessionRepository;
-        this.restTemplate = builder.build();
-        this.props = props;
-    }
+	public ResponseForSessionHandler(SeminarRepository seminarRepository, SessionRepository sessionRepository,
+			RestTemplateBuilder builder, EnqueteProps props) {
+		this.seminarRepository = seminarRepository;
+		this.sessionRepository = sessionRepository;
+		this.restTemplate = builder.build();
+		this.props = props;
+	}
 
-    @HandleBeforeCreate
-    @HandleBeforeSave
-    public void check(ResponseForSession response) {
-        Session session = response.getSession(); // must not be null
-        Seminar seminar = seminarRepository.findBySessions(session).get(); // NoSuchElementException
-        // => 404
-        if (!seminar.isOpen()) {
-            throw new IllegalStateException("The seminar has been closed.");
-        }
-    }
+	@HandleBeforeCreate
+	@HandleBeforeSave
+	public void check(ResponseForSession response) {
+		Session session = response.getSession(); // must not be null
+		Seminar seminar = seminarRepository.findBySessions(session).get(); // NoSuchElementException
+		// => 404
+		if (!seminar.isOpen()) {
+			throw new IllegalStateException("The seminar has been closed.");
+		}
+	}
 
-    @HandleAfterCreate
-    public void webhook(ResponseForSession response) {
-        if (!StringUtils.isEmpty(this.props.getResponseForSessionWebhookUrl())) {
-            UUID sessionId = response.getSession().getSessionId();
-            this.sessionRepository.findBySessionId(sessionId)
-                .ifPresent(session -> {
-                    Map<String, Object> body = new HashMap<>();
-                    body.put("sessionId", sessionId.toString());
-                    body.put("sessionName", session.getSessionName());
-                    body.put("satisfaction", response.getSatisfaction().name());
-                    body.put("count", 1);
-                    RequestEntity<Map<String, Object>> requestEntity = RequestEntity.post(URI.create(this.props.getResponseForSessionWebhookUrl() + "/webhook"))
-                        .body(body);
-                    try {
-                        this.restTemplate.exchange(requestEntity, String.class);
-                    } catch (RuntimeException e) {
-                        log.warn("Failed to push a webhook", e);
-                    }
-                });
-        }
-    }
+	@HandleAfterCreate
+	public void webhook(ResponseForSession response) {
+		if (!StringUtils.isEmpty(this.props.getResponseForSessionWebhookUrl())) {
+			UUID sessionId = response.getSession().getSessionId();
+			this.sessionRepository.findBySessionId(sessionId).ifPresent(session -> {
+				Map<String, Object> body = new HashMap<>();
+				body.put("sessionId", sessionId.toString());
+				body.put("sessionName", session.getSessionName());
+				body.put("satisfaction", response.getSatisfaction().name());
+				body.put("count", 1);
+				RequestEntity<Map<String, Object>> requestEntity = RequestEntity
+					.post(URI.create(this.props.getResponseForSessionWebhookUrl() + "/webhook"))
+					.body(body);
+				try {
+					this.restTemplate.exchange(requestEntity, String.class);
+				}
+				catch (RuntimeException e) {
+					log.warn("Failed to push a webhook", e);
+				}
+			});
+		}
+	}
+
 }
