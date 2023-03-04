@@ -45,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests() //
 			/* */.mvcMatchers("/v1/responses_for_session", "/v1/responses_for_seminar", "/v1/coupons/**",
 					"/v1/coupon_used", "/seminars/*", "/sessions/*", "/coupons/*", "/actuator/health", "/actuator/info",
+					"/actuator/health/readiness", "/actuator/health/liveness", "/readyz", "/livez",
 					"/actuator/prometheus")
 			.permitAll() //
 			/* */.mvcMatchers("/admin", "/admin/**", "/v1/**", "/actuator/**")
