@@ -1,6 +1,13 @@
 package am.ik.openenquete.security;
 
 import am.ik.openenquete.EnqueteProps;
+import am.ik.openenquete.accesslogger.AccessLogger;
+
+import org.springframework.boot.actuate.autoconfigure.trace.http.HttpTraceProperties;
+import org.springframework.boot.actuate.trace.http.HttpExchangeTracer;
+import org.springframework.boot.actuate.web.trace.servlet.HttpTraceFilter;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -8,10 +15,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableConfigurationProperties(HttpTraceProperties.class)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final EnqueteUserService enqueteUserService;
@@ -55,6 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			/* */.anyRequest()
 			.authenticated() //
 			.and() //
+			.addFilterAfter(httpTraceFilter(null), SecurityContextHolderAwareRequestFilter.class)
 			.csrf()
 			.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 			.and() //
@@ -70,6 +80,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.inMemoryAuthentication().withUser(this.props.getAdminClient().asUser());
+	}
+
+	@Bean
+	public HttpTraceFilter httpTraceFilter(HttpTraceProperties properties) {
+		final AccessLogger accessLogger = new AccessLogger(httpTrace -> {
+			final String uri = httpTrace.getRequest().getUri().getPath();
+			final boolean deny = uri != null && (uri.equals("/readyz") || uri.equals("/livez")
+					|| uri.startsWith("/actuator") || uri.startsWith("/_static"));
+			return !deny;
+		});
+		return new HttpTraceFilter(accessLogger, new HttpExchangeTracer(properties.getInclude()));
 	}
 
 }

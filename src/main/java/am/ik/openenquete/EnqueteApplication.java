@@ -3,7 +3,6 @@ package am.ik.openenquete;
 import java.time.LocalDate;
 import java.util.List;
 
-import am.ik.openenquete.accesslogger.AccessLogger;
 import am.ik.openenquete.questionnaire.enums.Difficulty;
 import am.ik.openenquete.questionnaire.enums.Satisfaction;
 import am.ik.openenquete.seminar.ResponseForSeminar;
@@ -155,16 +154,6 @@ public class EnqueteApplication {
 		return MeterFilter.deny(id -> {
 			String uri = id.getTag("uri");
 			return uri != null && (uri.startsWith("/actuator") || uri.startsWith("/cloudfoundryapplication"));
-		});
-	}
-
-	@Bean
-	public AccessLogger accessLogger() {
-		return new AccessLogger(httpTrace -> {
-			final String uri = httpTrace.getRequest().getUri().getPath();
-			final boolean deny = uri != null && (uri.equals("/readyz") || uri.equals("/livez")
-					|| uri.startsWith("/actuator") || uri.startsWith("/_static"));
-			return !deny;
 		});
 	}
 
